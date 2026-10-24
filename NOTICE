@@ -1,0 +1,12 @@
+Cafe AI Replenishment Prototype
+
+Based on the project owner's supplied cafe_ollama_stock.py.
+Original file preserved in original/cafe_ollama_stock_original.py.
+Engineering revisions and documentation prepared with Codex / ChatGPT assistance on 2026-10-21.
+
+Project source is distributed under Apache License 2.0 (see LICENSE), subject to any rights in
+the original supplied material. Preserve applicable attribution when submitting.
+Model weights are not included. Llama model licensing remains separate.
+Bundled openpyxl and et_xmlfile retain their own licenses under vendor/.
+
+No model fine-tuning, production deployment, or real-business accuracy certification is claimed.

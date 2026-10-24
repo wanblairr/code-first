@@ -1,0 +1,12 @@
+{
+  "timestamp_utc": "2026-10-21T14:49:00.449665+00:00",
+  "python": "3.13.15",
+  "tests_run": 52,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "success": true,
+  "live_llm_tested": false,
+  "model_weights_trained": false,
+  "scope": "工程单元/接口替身测试，不代表真实 Llama 输出质量或门店预测准确率"
+}

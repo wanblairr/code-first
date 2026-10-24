@@ -1,0 +1,57 @@
+test_approval_does_not_add_stock_receipt_once (test_cafe.AuditTests.test_approval_does_not_add_stock_receipt_once) ... ok
+test_blocked_result_not_approvable (test_cafe.AuditTests.test_blocked_result_not_approvable) ... ok
+test_explicit_ack_required (test_cafe.AuditTests.test_explicit_ack_required) ... ok
+test_fixture_result_not_approvable (test_cafe.AuditTests.test_fixture_result_not_approvable) ... ok
+test_operator_cannot_approve (test_cafe.AuditTests.test_operator_cannot_approve) ... ok
+test_repeated_click_no_duplicate (test_cafe.AuditTests.test_repeated_click_no_duplicate) ... ok
+test_second_forecast_same_shop_day_no_duplicate (test_cafe.AuditTests.test_second_forecast_same_shop_day_no_duplicate) ... ok
+test_calibration_applies_only_explicitly_to_future (test_cafe.EvaluationTests.test_calibration_applies_only_explicitly_to_future) ... ok
+test_calibration_cannot_leak_into_past (test_cafe.EvaluationTests.test_calibration_cannot_leak_into_past) ... ok
+test_calibration_chronological_holdout (test_cafe.EvaluationTests.test_calibration_chronological_holdout) ... ok
+test_calibration_needs_enough_records (test_cafe.EvaluationTests.test_calibration_needs_enough_records) ... ok
+test_calibration_rejected_when_holdout_worse (test_cafe.EvaluationTests.test_calibration_rejected_when_holdout_worse) ... ok
+test_holdout_truth_not_in_prompt (test_cafe.EvaluationTests.test_holdout_truth_not_in_prompt) ... ok
+test_zero_actual_wape_undefined (test_cafe.EvaluationTests.test_zero_actual_wape_undefined) ... ok
+test_export_is_values_not_formulas (test_cafe.ExcelTests.test_export_is_values_not_formulas) ... ok
+test_formula_input_rejected (test_cafe.ExcelTests.test_formula_input_rejected) ... ok
+test_template_roundtrip (test_cafe.ExcelTests.test_template_roundtrip) ... ok
+test_cancel_prevents_purchase (test_cafe.ForecastTests.test_cancel_prevents_purchase) ... ok
+test_closure_bypasses_ai (test_cafe.ForecastTests.test_closure_bypasses_ai) ... ok
+test_five_samples_never_disguised_as_ten (test_cafe.ForecastTests.test_five_samples_never_disguised_as_ten) ... ok
+test_invalid_response_retries_once (test_cafe.ForecastTests.test_invalid_response_retries_once) ... ok
+test_large_disagreement_visible_even_when_trimmed (test_cafe.ForecastTests.test_large_disagreement_visible_even_when_trimmed) ... ok
+test_normal_ten_calls_unique_seeds (test_cafe.ForecastTests.test_normal_ten_calls_unique_seeds) ... ok
+test_service_down_stops_immediately (test_cafe.ForecastTests.test_service_down_stops_immediately) ... ok
+test_ten_samples_trim_two_each_side (test_cafe.ForecastTests.test_ten_samples_trim_two_each_side) ... ok
+test_two_failures_stop_without_suggestion (test_cafe.ForecastTests.test_two_failures_stop_without_suggestion) ... ok
+test_enough_stock_zero_purchase (test_cafe.InventoryTests.test_enough_stock_zero_purchase) ... ok
+test_hundred_cups_not_five_kg_minimum (test_cafe.InventoryTests.test_hundred_cups_not_five_kg_minimum) ... ok
+test_inbound_deducted (test_cafe.InventoryTests.test_inbound_deducted) ... ok
+test_late_supplier_irrelevant_when_no_order (test_cafe.InventoryTests.test_late_supplier_irrelevant_when_no_order) ... ok
+test_order_limit_blocks_not_clips (test_cafe.InventoryTests.test_order_limit_blocks_not_clips) ... ok
+test_pack_rounding_no_float_extra_pack (test_cafe.InventoryTests.test_pack_rounding_no_float_extra_pack) ... ok
+test_storage_limit_after_package_rounding (test_cafe.InventoryTests.test_storage_limit_after_package_rounding) ... ok
+test_supplier_late_blocks (test_cafe.InventoryTests.test_supplier_late_blocks) ... ok
+test_gpu_not_runpod_rejected (test_cafe.TransportTests.test_gpu_not_runpod_rejected) ... ok
+test_local_protocol_full_cycle (test_cafe.TransportTests.test_local_protocol_full_cycle) ... ok
+test_oversized_prompt_rejected_before_request (test_cafe.TransportTests.test_oversized_prompt_rejected_before_request) ... ok
+test_remote_http_rejected (test_cafe.TransportTests.test_remote_http_rejected) ... ok
+test_calendar_mismatch (test_cafe.ValidationTests.test_calendar_mismatch) ... ok
+test_decimal_cups_rejected (test_cafe.ValidationTests.test_decimal_cups_rejected) ... ok
+test_delivery_cannot_be_in_past (test_cafe.ValidationTests.test_delivery_cannot_be_in_past) ... ok
+test_fabricated_evidence_rejected (test_cafe.ValidationTests.test_fabricated_evidence_rejected) ... ok
+test_history_conflict_and_duplicate (test_cafe.ValidationTests.test_history_conflict_and_duplicate) ... ok
+test_history_leakage (test_cafe.ValidationTests.test_history_leakage) ... ok
+test_invalid_horizon (test_cafe.ValidationTests.test_invalid_horizon) ... ok
+test_missing_stock_rejected (test_cafe.ValidationTests.test_missing_stock_rejected) ... ok
+test_model_extra_fields_rejected (test_cafe.ValidationTests.test_model_extra_fields_rejected) ... ok
+test_negative_and_nonfinite_inputs (test_cafe.ValidationTests.test_negative_and_nonfinite_inputs) ... ok
+test_prediction_invalid_values (test_cafe.ValidationTests.test_prediction_invalid_values) ... ok
+test_real_records_rejected (test_cafe.ValidationTests.test_real_records_rejected) ... ok
+test_untrusted_owner_text_kept_as_data (test_cafe.ValidationTests.test_untrusted_owner_text_kept_as_data) ... ok
+test_yesterday_date_explicit (test_cafe.ValidationTests.test_yesterday_date_explicit) ... ok
+
+----------------------------------------------------------------------
+Ran 52 tests in 1.302s
+
+OK

@@ -1,0 +1,8 @@
+{
+  "source": "team_created_synthetic",
+  "seed": 20261021,
+  "generator": "make_examples.py",
+  "contains_real_business_records": false,
+  "forecast_accuracy_claim": null,
+  "note": "人为规律和随机扰动仅用于工程测试。不得把模型在这些案例的效果称为真实店铺验证。"
+}

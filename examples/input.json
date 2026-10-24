@@ -1,0 +1,279 @@
+{
+  "context": {
+    "shop_id": "SYNTHETIC_CAFE_01",
+    "as_of_date": "2026-10-21",
+    "sales_date": "2026-10-20",
+    "target_date": "2026-10-22",
+    "cups_sold": 100,
+    "weather": "模拟：晴，约 30°C",
+    "is_holiday": false,
+    "nearby_event": "模拟：没有已确认活动",
+    "owner_comment": "模拟：希望减少囤货；没有额外客流证据",
+    "daily_capacity": 300,
+    "grams_per_cup": 18,
+    "opening_stock_kg": 0.5,
+    "due_inbound_kg": 0,
+    "safety_stock_kg": 0.2,
+    "pack_kg": 0.5,
+    "max_order_kg": 10,
+    "storage_capacity_kg": 20,
+    "supplier_delivery_date": "2026-10-22",
+    "closed": false,
+    "stockout": false,
+    "data_source": "synthetic"
+  },
+  "history": [
+    {
+      "date": "2026-09-23",
+      "cups": 83,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-09-24",
+      "cups": 77,
+      "weather": "模拟：下雨",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-09-25",
+      "cups": 90,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-09-26",
+      "cups": 100,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-09-27",
+      "cups": 128,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：附近校园活动，规模未知",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-09-28",
+      "cups": 94,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-09-29",
+      "cups": 80,
+      "weather": "模拟：下雨",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-09-30",
+      "cups": 93,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-01",
+      "cups": 81,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-02",
+      "cups": 85,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-03",
+      "cups": 110,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-04",
+      "cups": 97,
+      "weather": "模拟：下雨",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-05",
+      "cups": 92,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-06",
+      "cups": 94,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-07",
+      "cups": 89,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-08",
+      "cups": 117,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：附近校园活动，规模未知",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-09",
+      "cups": 92,
+      "weather": "模拟：下雨",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-10",
+      "cups": 105,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-11",
+      "cups": 111,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-12",
+      "cups": 101,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-13",
+      "cups": 97,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-14",
+      "cups": 82,
+      "weather": "模拟：下雨",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-15",
+      "cups": 93,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-16",
+      "cups": 95,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-17",
+      "cups": 101,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-18",
+      "cups": 105,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-19",
+      "cups": 104,
+      "weather": "模拟：下雨",
+      "is_holiday": false,
+      "event": "模拟：附近校园活动，规模未知",
+      "stockout": false,
+      "data_source": "synthetic"
+    },
+    {
+      "date": "2026-10-20",
+      "cups": 100,
+      "weather": "模拟：晴",
+      "is_holiday": false,
+      "event": "模拟：无已确认活动",
+      "stockout": false,
+      "data_source": "synthetic"
+    }
+  ]
+}
