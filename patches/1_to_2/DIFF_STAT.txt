@@ -1,0 +1,64 @@
+ .gitignore                                         |    4 +
+ README.md                                          |   38 +-
+ ...E_v3_1_\345\205\210\350\257\273\346\210\221.md" |   20 +
+ README_v3_2.md                                     |   74 +
+ ...DME_v3_\345\205\210\350\257\273\346\210\221.md" |  244 +-
+ ...256\271\346\200\247\344\277\256\345\244\215.md" |   53 +
+ cafe_app.py                                        |   53 +-
+ cafe_auth.py                                       |   64 +
+ cafe_context.py                                    |  278 ++
+ cafe_context_workflow.py                           |  122 +
+ cafe_forecast_context.py                           |  455 ++
+ cafe_materials.py                                  |    4 +-
+ cafe_service.py                                    |  133 +-
+ cafe_web.py                                        |   77 +-
+ cafe_zip.py                                        |   87 +
+ data/calendar_kl_2026.json                         |   45 +
+ examples_context/data_manifest.json                |   58 +
+ examples_context/environment.json                  | 4104 +++++++++++++++++
+ examples_context/sales.csv                         |  880 ++++
+ examples_context/target_context.json               |   14 +
+ examples_context/tomorrow_context.json             |   14 +
+ examples_v3/inventory.json                         |  129 +-
+ models/demand_context_v32.json                     | 4685 ++++++++++++++++++++
+ reports/compat_lan_smoke.json                      |   12 +
+ reports/compat_live_service.json                   |    9 +
+ reports/compat_startup_tests.txt                   |   13 +
+ reports/compatibility_fix_verification.json        |   28 +
+ reports/delivery_manifest_v3_1.json                |   35 +
+ reports/demo_model_consistency_v32.json            |  181 +
+ reports/engineering_summary.json                   |    8 +-
+ reports/engineering_tests.txt                      |   80 +-
+ reports/entry_auth_release_verification.json       |   59 +
+ reports/first_start_verification.json              |   27 +
+ reports/password_entry_verification.json           |   10 +
+ reports/test_v32_log.txt                           |    4 +
+ reports/training_context_v32.json                  | 4327 ++++++++++++++++++
+ reports/training_context_v32.md                    |   55 +
+ ...64\255\345\267\245\344\275\234\345\217\260.png" |  Bin 0 -> 54131 bytes
+ ...34\200\347\273\210\345\244\215\346\240\270.png" |  Bin 0 -> 51685 bytes
+ ...74\272\350\264\247\347\241\256\350\256\244.png" |  Bin 0 -> 45913 bytes
+ ...50\277\345\267\245\344\275\234\345\214\272.png" |  Bin 0 -> 45671 bytes
+ reports/verification_v32.json                      |   19 +
+ ...76\350\256\241\350\257\264\346\230\216_v3_1.md" |   30 +
+ run_tests.py                                       |  154 +-
+ start.cmd                                          |    2 +-
+ start_demo_v3.cmd                                  |   54 +-
+ start_v2.cmd                                       |   10 +-
+ start_weather_demo.cmd                             |   49 +
+ tests/test_context_v32.py                          |  173 +
+ tests/test_forecast_context_v32.py                 |  171 +
+ tests/test_forecast_v3.py                          |    3 +-
+ tests/test_lan_hosts.py                            |  104 +
+ tests/test_owner_auth.py                           |  117 +
+ tests/test_service_context_v32.py                  |  280 ++
+ tests/test_startup_compat.py                       |  149 +
+ tests/test_test_runner.py                          |   94 +
+ tests/test_usability_v31.py                        |  121 +
+ tests/test_web_v3.py                               |   11 +-
+ tests/test_workflow_v3.py                          |    3 +-
+ tests/test_zip_portability.py                      |   84 +
+ web_v3/app.js                                      |  278 +-
+ web_v3/index.html                                  |   41 +-
+ web_v3/style.css                                   |   12 +-
+ 63 files changed, 18073 insertions(+), 369 deletions(-)
