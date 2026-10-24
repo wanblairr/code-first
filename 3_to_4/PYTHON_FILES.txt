@@ -1,0 +1,4 @@
+A	verification/history_v361/history_v36/history_v35/history_v34/local_smoke_check.py
+A	verification/history_v361/history_v36/history_v35/history_v34/verify_v34_mock_routes.py
+D	verification/history_v36/history_v35/history_v34/local_smoke_check.py
+D	verification/history_v36/history_v35/history_v34/verify_v34_mock_routes.py

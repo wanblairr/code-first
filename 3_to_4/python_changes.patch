@@ -1,0 +1,302 @@
+diff --git a/verification/history_v36/history_v35/history_v34/local_smoke_check.py b/verification/history_v36/history_v35/history_v34/local_smoke_check.py
+deleted file mode 100644
+index a773d582da47b3370404ff9779995ff29578c750..0000000000000000000000000000000000000000
+--- a/verification/history_v36/history_v35/history_v34/local_smoke_check.py
++++ /dev/null
+@@ -1,64 +0,0 @@
+-"""Offline acceptance of the unpacked source release; no external API calls."""
+-from pathlib import Path
+-import hashlib, json, os, runpy, subprocess, sys, tempfile
+-ROOT=Path(__file__).resolve().parents[1]
+-APP=ROOT/'local_app'
+-sys.path.insert(0,str(APP))
+-from cafe_service import CafeService
+-from cafe_app import export_order
+-from cafe_auth import load_auth_policy, verify_owner_password
+-
+-def main():
+-    setup=runpy.run_path(str(ROOT/'setup_owner_password.py'))
+-    temp_root=Path(sys.argv[1] if len(sys.argv)>1 else tempfile.gettempdir()).resolve()
+-    temp_root.mkdir(parents=True,exist_ok=True)
+-    with tempfile.TemporaryDirectory(prefix='cafe-final-smoke-',dir=str(temp_root)) as name:
+-        base=Path(name).resolve()
+-        assert base.parent==temp_root and base.name.startswith('cafe-final-smoke-')
+-        password_dir=base/'password-check'
+-        password_dir.mkdir()
+-        assert setup['configure'](password_dir,lambda _: 'only-a-smoke-fixture',True)==0
+-        assert verify_owner_password('only-a-smoke-fixture',load_auth_policy(password_dir/'auth_config.json'))
+-        before=(password_dir/'auth_config.json').read_bytes()
+-        assert setup['configure'](password_dir,lambda _: (_ for _ in ()).throw(AssertionError()),True)==0
+-        assert (password_dir/'auth_config.json').read_bytes()==before
+-        mismatch_dir=base/'mismatch-check';mismatch_dir.mkdir()
+-        values=iter(['first-fixture','second-fixture'])
+-        assert setup['configure'](mismatch_dir,lambda _: next(values),True)==2
+-        assert not (mismatch_dir/'auth_config.json').exists()
+-        env={k:v for k,v in os.environ.items() if not k.startswith(('RUNPOD_','GMAIL_','WHATSAPP_','CAFE_DEMO_BASE'))}
+-        env['PYTHONUTF8']='1'
+-        for command in ('demo-context','train','run'):
+-            result=subprocess.run([sys.executable,str(APP/'cafe_app.py'),'--base',str(base/'store'),command],cwd=str(ROOT),env=env,capture_output=True,text=True,encoding='utf-8',timeout=30)
+-            assert result.returncode==0, command+' failed: '+result.stderr[:1000]
+-        service=CafeService(base/'store')
+-        catalog=service.catalog()
+-        supplier=service.inputs()['suppliers']['suppliers'][0]['supplier_id']
+-        saved=service.save_catalog({'revision':catalog['revision'],'prices':{k:f'{v/100:.2f}' for k,v in catalog['prices'].items()},'products':[{'product_id':'','name':'Vanilla syrup / 香草糖浆','category':'糖浆与调味','purchase_unit':'瓶','quantity':2,'unit_price_myr':'28.50','supplier_id':supplier}]})
+-        custom_id=saved['products'][0]['product_id']
+-        proposal=service.trigger()
+-        assert proposal['status']=='pending' and proposal['analysis']
+-        milk=next(i for i in proposal['plan']['items'] if i['ingredient_id']=='milk')
+-        assert milk['suggested_quantity']>=milk['pack_size']
+-        quantities={'milk':milk['suggested_quantity']-milk['pack_size']}
+-        inventory_before=service.inputs()['inventory']
+-        preview=service.preview(proposal['id'],proposal['revision'],proposal['input_hash'],quantities)
+-        assert preview['changes']
+-        order=service.approve(proposal['id'],proposal['revision'],proposal['input_hash'],quantities,True)
+-        assert order['manual_total_cents']==5700
+-        assert order['total_cents']==sum(i['line_total_cents'] for i in order['items'])
+-        assert order['sent'] is False and order['inventory_changed'] is False
+-        assert service.inputs()['inventory']==inventory_before
+-        approved_milk=next(i for i in order['items'] if i['ingredient_id']=='milk')
+-        assert approved_milk['approved_quantity']==quantities['milk']
+-        drafts=service.store.drafts_for(order['id'])
+-        assert len(drafts)==3 and all(d['sent'] is False for d in drafts)
+-        assert any('MYR 57.00' in d['body'] and 'Vanilla syrup' in d['body'] for d in drafts)
+-        export_order(service,order['id'],base/'export')
+-        assert len(list((base/'export').rglob('*.eml')))==3
+-        assert len(list((base/'export').rglob('*.txt')))==3
+-        assert any(e['action']=='approved_draft_created' for e in service.store.snapshot()['events'])
+-        result={'success':True,'cli_commands':['demo-context','train','run'],'first_password_setup_verified':True,'existing_password_preserved':True,'password_mismatch_refused':True,'weather_holiday_analysis_present':True,'milk_edit_preview_and_approval_verified':True,'custom_product_amount_cents':5700,'grand_total_verified':True,'supplier_drafts':3,'eml_files':3,'txt_files':3,'inventory_unchanged':True,'external_api_calls':0,'messages_sent':0,'paid_inferences':0}
+-        print(json.dumps(result,ensure_ascii=False))
+-        return result
+-if __name__=='__main__': main()
+diff --git a/verification/history_v36/history_v35/history_v34/verify_v34_mock_routes.py b/verification/history_v36/history_v35/history_v34/verify_v34_mock_routes.py
+deleted file mode 100644
+index b2cd8ea0dca68b85310acacaea81ac5cb06e0ddf..0000000000000000000000000000000000000000
+--- a/verification/history_v36/history_v35/history_v34/verify_v34_mock_routes.py
++++ /dev/null
+@@ -1,75 +0,0 @@
+-"""Run existing v3.3 integration route tests with in-memory HTTP transport.
+-
+-This helper does not replace or alter any test case. It substitutes the server
+-listener and client socket transport only. Real BaseHTTPRequestHandler parsing,
+-owner login, session state, Host checks, CSRF checks and route dispatch still run.
+-No socket is opened and service/provider methods remain the existing Mocks.
+-"""
+-from __future__ import annotations
+-
+-import argparse
+-import json
+-from pathlib import Path
+-import sys
+-import tempfile
+-from types import SimpleNamespace
+-import unittest
+-from unittest.mock import patch
+-
+-
+-def main():
+-    parser = argparse.ArgumentParser(description=__doc__)
+-    parser.add_argument("--app", type=Path, default=Path(__file__).resolve().parents[1] / "local_app")
+-    args = parser.parse_args()
+-    app = args.app.resolve()
+-    sys.path[:0] = [str(app), str(app / "tests")]
+-    from test_integration_web_v33 import IntegrationWebTests
+-    from test_catalog_v34 import CatalogHttpWithoutSocketTests
+-
+-    observed = []
+-    original_request = IntegrationWebTests.request
+-
+-    def listener(address, handler):
+-        return SimpleNamespace(
+-            RequestHandlerClass=handler, server_port=8765,
+-            serve_forever=lambda: None, shutdown=lambda: None,
+-            server_close=lambda: None,
+-        )
+-
+-    def request_in_memory(self, method, path, data=None, headers=None):
+-        status, response_headers, payload = CatalogHttpWithoutSocketTests.request(self, method, path, data, headers)
+-        decoded = json.loads(payload) if response_headers.get("Content-Type", "").startswith("application/json") else payload.decode("utf-8")
+-        if method == "GET" and path == "/api/state" and status == 200:
+-            self.assertIsInstance(decoded["csrf"], str)
+-            self.assertTrue(decoded["csrf"])
+-            self.assertIsInstance(decoded["catalog"], dict)
+-            self.assertIsInstance(decoded["catalog"]["categories"], list)
+-            self.assertIsInstance(decoded["catalog"]["templates"], list)
+-            self.assertEqual(decoded["catalog"]["suppliers"], [])
+-            observed.append({"status": status, "csrf_present": True, "catalog_present": True, "suppliers": []})
+-        return status, response_headers, decoded
+-
+-    suite = unittest.defaultTestLoader.loadTestsFromTestCase(IntegrationWebTests)
+-    try:
+-        with tempfile.TemporaryDirectory(prefix="v34-mock-http-", dir=str(Path(__file__).resolve().parent)) as scratch, \
+-             patch.object(tempfile, "tempdir", scratch), \
+-             patch("cafe_web.ThreadingHTTPServer", listener), \
+-             patch.object(IntegrationWebTests, "request", request_in_memory), \
+-             patch("socket.socket", side_effect=AssertionError("Verification must not open sockets")), \
+-             patch("socket.create_connection", side_effect=AssertionError("Verification must not connect to network")):
+-            result = unittest.TextTestRunner(verbosity=2).run(suite)
+-    finally:
+-        # patch.object restores the test transport even when a test raises.
+-        assert IntegrationWebTests.request is original_request
+-    summary = {"transport": "in-memory HTTP streams; no socket or provider calls", "tests_run": result.testsRun,
+-               "failures": len(result.failures), "errors": len(result.errors), "skipped": len(result.skipped),
+-               "state_200_contract_checks": len(observed), "success": result.wasSuccessful() and len(observed) >= 10}
+-    print(json.dumps(summary, ensure_ascii=False, indent=2))
+-    return 0 if summary["success"] else 1
+-
+-
+-if __name__ == "__main__":
+-    if hasattr(sys.stdout, "reconfigure"):
+-        sys.stdout.reconfigure(encoding="utf-8")
+-        sys.stderr.reconfigure(encoding="utf-8")
+-    raise SystemExit(main())
+diff --git a/verification/history_v361/history_v36/history_v35/history_v34/local_smoke_check.py b/verification/history_v361/history_v36/history_v35/history_v34/local_smoke_check.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a773d582da47b3370404ff9779995ff29578c750
+--- /dev/null
++++ b/verification/history_v361/history_v36/history_v35/history_v34/local_smoke_check.py
+@@ -0,0 +1,64 @@
++"""Offline acceptance of the unpacked source release; no external API calls."""
++from pathlib import Path
++import hashlib, json, os, runpy, subprocess, sys, tempfile
++ROOT=Path(__file__).resolve().parents[1]
++APP=ROOT/'local_app'
++sys.path.insert(0,str(APP))
++from cafe_service import CafeService
++from cafe_app import export_order
++from cafe_auth import load_auth_policy, verify_owner_password
++
++def main():
++    setup=runpy.run_path(str(ROOT/'setup_owner_password.py'))
++    temp_root=Path(sys.argv[1] if len(sys.argv)>1 else tempfile.gettempdir()).resolve()
++    temp_root.mkdir(parents=True,exist_ok=True)
++    with tempfile.TemporaryDirectory(prefix='cafe-final-smoke-',dir=str(temp_root)) as name:
++        base=Path(name).resolve()
++        assert base.parent==temp_root and base.name.startswith('cafe-final-smoke-')
++        password_dir=base/'password-check'
++        password_dir.mkdir()
++        assert setup['configure'](password_dir,lambda _: 'only-a-smoke-fixture',True)==0
++        assert verify_owner_password('only-a-smoke-fixture',load_auth_policy(password_dir/'auth_config.json'))
++        before=(password_dir/'auth_config.json').read_bytes()
++        assert setup['configure'](password_dir,lambda _: (_ for _ in ()).throw(AssertionError()),True)==0
++        assert (password_dir/'auth_config.json').read_bytes()==before
++        mismatch_dir=base/'mismatch-check';mismatch_dir.mkdir()
++        values=iter(['first-fixture','second-fixture'])
++        assert setup['configure'](mismatch_dir,lambda _: next(values),True)==2
++        assert not (mismatch_dir/'auth_config.json').exists()
++        env={k:v for k,v in os.environ.items() if not k.startswith(('RUNPOD_','GMAIL_','WHATSAPP_','CAFE_DEMO_BASE'))}
++        env['PYTHONUTF8']='1'
++        for command in ('demo-context','train','run'):
++            result=subprocess.run([sys.executable,str(APP/'cafe_app.py'),'--base',str(base/'store'),command],cwd=str(ROOT),env=env,capture_output=True,text=True,encoding='utf-8',timeout=30)
++            assert result.returncode==0, command+' failed: '+result.stderr[:1000]
++        service=CafeService(base/'store')
++        catalog=service.catalog()
++        supplier=service.inputs()['suppliers']['suppliers'][0]['supplier_id']
++        saved=service.save_catalog({'revision':catalog['revision'],'prices':{k:f'{v/100:.2f}' for k,v in catalog['prices'].items()},'products':[{'product_id':'','name':'Vanilla syrup / 香草糖浆','category':'糖浆与调味','purchase_unit':'瓶','quantity':2,'unit_price_myr':'28.50','supplier_id':supplier}]})
++        custom_id=saved['products'][0]['product_id']
++        proposal=service.trigger()
++        assert proposal['status']=='pending' and proposal['analysis']
++        milk=next(i for i in proposal['plan']['items'] if i['ingredient_id']=='milk')
++        assert milk['suggested_quantity']>=milk['pack_size']
++        quantities={'milk':milk['suggested_quantity']-milk['pack_size']}
++        inventory_before=service.inputs()['inventory']
++        preview=service.preview(proposal['id'],proposal['revision'],proposal['input_hash'],quantities)
++        assert preview['changes']
++        order=service.approve(proposal['id'],proposal['revision'],proposal['input_hash'],quantities,True)
++        assert order['manual_total_cents']==5700
++        assert order['total_cents']==sum(i['line_total_cents'] for i in order['items'])
++        assert order['sent'] is False and order['inventory_changed'] is False
++        assert service.inputs()['inventory']==inventory_before
++        approved_milk=next(i for i in order['items'] if i['ingredient_id']=='milk')
++        assert approved_milk['approved_quantity']==quantities['milk']
++        drafts=service.store.drafts_for(order['id'])
++        assert len(drafts)==3 and all(d['sent'] is False for d in drafts)
++        assert any('MYR 57.00' in d['body'] and 'Vanilla syrup' in d['body'] for d in drafts)
++        export_order(service,order['id'],base/'export')
++        assert len(list((base/'export').rglob('*.eml')))==3
++        assert len(list((base/'export').rglob('*.txt')))==3
++        assert any(e['action']=='approved_draft_created' for e in service.store.snapshot()['events'])
++        result={'success':True,'cli_commands':['demo-context','train','run'],'first_password_setup_verified':True,'existing_password_preserved':True,'password_mismatch_refused':True,'weather_holiday_analysis_present':True,'milk_edit_preview_and_approval_verified':True,'custom_product_amount_cents':5700,'grand_total_verified':True,'supplier_drafts':3,'eml_files':3,'txt_files':3,'inventory_unchanged':True,'external_api_calls':0,'messages_sent':0,'paid_inferences':0}
++        print(json.dumps(result,ensure_ascii=False))
++        return result
++if __name__=='__main__': main()
+diff --git a/verification/history_v361/history_v36/history_v35/history_v34/verify_v34_mock_routes.py b/verification/history_v361/history_v36/history_v35/history_v34/verify_v34_mock_routes.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..b2cd8ea0dca68b85310acacaea81ac5cb06e0ddf
+--- /dev/null
++++ b/verification/history_v361/history_v36/history_v35/history_v34/verify_v34_mock_routes.py
+@@ -0,0 +1,75 @@
++"""Run existing v3.3 integration route tests with in-memory HTTP transport.
++
++This helper does not replace or alter any test case. It substitutes the server
++listener and client socket transport only. Real BaseHTTPRequestHandler parsing,
++owner login, session state, Host checks, CSRF checks and route dispatch still run.
++No socket is opened and service/provider methods remain the existing Mocks.
++"""
++from __future__ import annotations
++
++import argparse
++import json
++from pathlib import Path
++import sys
++import tempfile
++from types import SimpleNamespace
++import unittest
++from unittest.mock import patch
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--app", type=Path, default=Path(__file__).resolve().parents[1] / "local_app")
++    args = parser.parse_args()
++    app = args.app.resolve()
++    sys.path[:0] = [str(app), str(app / "tests")]
++    from test_integration_web_v33 import IntegrationWebTests
++    from test_catalog_v34 import CatalogHttpWithoutSocketTests
++
++    observed = []
++    original_request = IntegrationWebTests.request
++
++    def listener(address, handler):
++        return SimpleNamespace(
++            RequestHandlerClass=handler, server_port=8765,
++            serve_forever=lambda: None, shutdown=lambda: None,
++            server_close=lambda: None,
++        )
++
++    def request_in_memory(self, method, path, data=None, headers=None):
++        status, response_headers, payload = CatalogHttpWithoutSocketTests.request(self, method, path, data, headers)
++        decoded = json.loads(payload) if response_headers.get("Content-Type", "").startswith("application/json") else payload.decode("utf-8")
++        if method == "GET" and path == "/api/state" and status == 200:
++            self.assertIsInstance(decoded["csrf"], str)
++            self.assertTrue(decoded["csrf"])
++            self.assertIsInstance(decoded["catalog"], dict)
++            self.assertIsInstance(decoded["catalog"]["categories"], list)
++            self.assertIsInstance(decoded["catalog"]["templates"], list)
++            self.assertEqual(decoded["catalog"]["suppliers"], [])
++            observed.append({"status": status, "csrf_present": True, "catalog_present": True, "suppliers": []})
++        return status, response_headers, decoded
++
++    suite = unittest.defaultTestLoader.loadTestsFromTestCase(IntegrationWebTests)
++    try:
++        with tempfile.TemporaryDirectory(prefix="v34-mock-http-", dir=str(Path(__file__).resolve().parent)) as scratch, \
++             patch.object(tempfile, "tempdir", scratch), \
++             patch("cafe_web.ThreadingHTTPServer", listener), \
++             patch.object(IntegrationWebTests, "request", request_in_memory), \
++             patch("socket.socket", side_effect=AssertionError("Verification must not open sockets")), \
++             patch("socket.create_connection", side_effect=AssertionError("Verification must not connect to network")):
++            result = unittest.TextTestRunner(verbosity=2).run(suite)
++    finally:
++        # patch.object restores the test transport even when a test raises.
++        assert IntegrationWebTests.request is original_request
++    summary = {"transport": "in-memory HTTP streams; no socket or provider calls", "tests_run": result.testsRun,
++               "failures": len(result.failures), "errors": len(result.errors), "skipped": len(result.skipped),
++               "state_200_contract_checks": len(observed), "success": result.wasSuccessful() and len(observed) >= 10}
++    print(json.dumps(summary, ensure_ascii=False, indent=2))
++    return 0 if summary["success"] else 1
++
++
++if __name__ == "__main__":
++    if hasattr(sys.stdout, "reconfigure"):
++        sys.stdout.reconfigure(encoding="utf-8")
++        sys.stderr.reconfigure(encoding="utf-8")
++    raise SystemExit(main())
