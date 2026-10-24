@@ -1,7 +1,7 @@
 """First unpacked start: choose a local password; no personal verifier is shipped."""
 from pathlib import Path
 import getpass, json, os, sys
-APP=Path(__file__).resolve().parent/'local_app'
+APP=Path(__file__).resolve().parent
 sys.path.insert(0,str(APP))
 from cafe_auth import make_auth_policy
 

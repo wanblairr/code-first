@@ -8,7 +8,8 @@ from pathlib import Path
 from cafe_core import AuditStore, CafeError, OllamaClient, json_text, run_forecast, save_json
 from cafe_io import demo_context, export_result, read_input, write_template
 
-BASE = Path(__file__).resolve().parent
+# 源码在 src/ 下，运行产物（runtime/、reports/）统一放在仓库根目录
+BASE = Path(__file__).resolve().parents[1]
 
 
 def main(argv=None):

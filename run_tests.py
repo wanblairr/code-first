@@ -3,12 +3,15 @@ import io
 import json
 import os
 import platform
+import sys
 import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
 base = Path(__file__).resolve().parent
+# 源码在 src/ 下；把 src 加入模块搜索路径，测试仍可直接 import cafe_core 等模块
+sys.path.insert(0, str(base / "src"))
 scratch = base / "runtime" / "test_tmp"
 scratch.mkdir(parents=True, exist_ok=True)
 assert scratch.resolve().is_relative_to(base.resolve())

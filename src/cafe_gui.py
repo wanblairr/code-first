@@ -10,7 +10,7 @@ from tkinter import filedialog, messagebox, ttk
 from cafe_core import AuditStore, CafeError, OllamaClient, fingerprint, json_text, run_forecast, validate_context, validate_history
 from cafe_io import BOOL_KEYS, LABELS, demo_context, export_result, parse_field, read_input, write_template
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parents[1]
 
 
 class CafeApp:

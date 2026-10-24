@@ -1,6 +1,7 @@
 import copy
 import json
 import math
+import sys
 import tempfile
 import threading
 import unittest
@@ -8,6 +9,9 @@ from datetime import date, timedelta
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from unittest.mock import patch
+
+# 源码位于仓库根目录的 src/ 下，保证任何测试运行器都能直接 import 这些模块
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from cafe_core import (AuditStore, CafeError, ModelUnavailable, OllamaClient, PROMPT_VERSION,
                        aggregate, evidence, procurement, run_forecast, validate_context,

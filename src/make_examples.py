@@ -41,4 +41,4 @@ def generate(base):
 
 
 if __name__ == "__main__":
-    generate(Path(__file__).resolve().parent)
+    generate(Path(__file__).resolve().parents[1])

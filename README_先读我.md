@@ -13,9 +13,11 @@
 5. 双击 `start.cmd`。或者在项目文件夹终端执行：
 
 ```powershell
-python cafe_ollama_stock.py doctor
-python cafe_ollama_stock.py gui
+python src/cafe_ollama_stock.py doctor
+python src/cafe_ollama_stock.py gui
 ```
+
+所有 Python 源码都放在 `src/` 目录下，入口是 `src/cafe_ollama_stock.py`；在仓库根目录执行上面的命令即可。运行产物（`runtime/` 数据库、`reports/` 测试报告）会写在仓库根目录，不会污染源码目录。
 
 本包附有 Excel 依赖 `vendor`，可以直接使用。若删掉了该目录，可执行 `python -m pip install -r requirements.txt`。核心预测、审计和 JSON 功能只用 Python 标准库。
 
@@ -90,17 +92,17 @@ python cafe_ollama_stock.py gui
 
 ```powershell
 # 先检查模型，避免对离线端点反复请求
-python cafe_ollama_stock.py doctor
+python src/cafe_ollama_stock.py doctor
 
 # 真实模型回测；14 案例需要正常情况下 140 次推理，可能较慢
-python cafe_ollama_stock.py evaluate examples/synthetic_backtest_cases.json --limit 14 --out runtime/live_evaluation.json
+python src/cafe_ollama_stock.py evaluate examples/synthetic_backtest_cases.json --limit 14 --out runtime/live_evaluation.json
 
 # 如果要评估偏差校准，需要至少 30 个完整案例；样例提供 40 个
-python cafe_ollama_stock.py evaluate examples/synthetic_backtest_cases.json --limit 40 --out runtime/live_evaluation_40.json
-python cafe_ollama_stock.py calibrate runtime/live_evaluation_40.json --out runtime/calibration.json
+python src/cafe_ollama_stock.py evaluate examples/synthetic_backtest_cases.json --limit 40 --out runtime/live_evaluation_40.json
+python src/cafe_ollama_stock.py calibrate runtime/live_evaluation_40.json --out runtime/calibration.json
 
 # 只有通过留出检查的校准文件才可用于其留出日期之后的输入
-python cafe_ollama_stock.py predict examples/input.json --calibration runtime/calibration.json --out runtime/result.xlsx
+python src/cafe_ollama_stock.py predict examples/input.json --calibration runtime/calibration.json --out runtime/result.xlsx
 ```
 
 **这些命令尚未对真实模型跑通，不存在已训练好的校准文件。** `examples/synthetic_backtest_cases.json` 是人为规则加随机扰动生成的合成测试集，其生成方式和固定种子公开在 `make_examples.py`；不是模型自己生成答案再拿来证明自己正确。合成回测表现不能证明真实经营效果。
@@ -122,7 +124,7 @@ $env:CAFE_OLLAMA_URL = "https://你的Pod代理主机.proxy.runpod.net"
 $env:CAFE_INFERENCE_MODE = "runpod_gpu"
 $env:CAFE_MODEL = "llama3.1:8b"
 # 若你的端点由认证网关保护，在环境变量中设置 CAFE_OLLAMA_TOKEN，勿写入代码或提交仓库
-python cafe_ollama_stock.py doctor
+python src/cafe_ollama_stock.py doctor
 ```
 
 该配置要求端点兼容 Ollama 的 `/api/version`、`/api/tags`、`/api/generate`；它不是直接把 RunPod Serverless URL 填入即可使用的通用适配器。
@@ -133,7 +135,7 @@ python cafe_ollama_stock.py doctor
 
 | 文件 | 用途 |
 |---|---|
-| `cafe_ollama_stock.py` | 主入口，兼容你的原文件名称 |
+| `src/cafe_ollama_stock.py` | 主入口，兼容你的原文件名称 |
 | `cafe_core.py` | 模型调用、十轮汇总、采购核算、审批日志 |
 | `cafe_gui.py` | Windows 本地图形界面 |
 | `cafe_io.py` | Excel/JSON 导入导出 |

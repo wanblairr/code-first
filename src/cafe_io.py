@@ -8,7 +8,7 @@ from pathlib import Path
 
 from cafe_core import CafeError, save_json, validate_context, validate_history
 
-VENDOR = Path(__file__).parent / "vendor"
+VENDOR = Path(__file__).resolve().parents[1] / "vendor"
 if VENDOR.exists():
     sys.path.insert(0, str(VENDOR))
 
